@@ -1,4 +1,4 @@
-PROJECT = traffic
+PROJECT = drink_machine
 
 EXECUTABLE = $(PROJECT).elf
 BIN_IMAGE = $(PROJECT).bin
@@ -14,6 +14,7 @@ LD = $(CROSS_COMPILE)ld
 OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
 SIZE = $(CROSS_COMPILE)size
+GDB = $(CROSS_COMPILE)gdb
 
 # Cortex-M4 implements the ARMv7E-M architecture
 CPU = cortex-m4
@@ -32,12 +33,12 @@ LDFLAGS += -L $(call get_library_path,libgcc.a)
 CFLAGS += -g -std=c99
 CFLAGS += -Wall
 
-# Optimizations
-CFLAGS += -g -std=c99 -O3 -ffast-math
-CFLAGS += -ffunction-sections -fdata-sections
-CFLAGS += -Wl,--gc-sections
-CFLAGS += -fno-common
-CFLAGS += --param max-inline-insns-single=1000
+# Optimizations, for debug, close temporalily
+#CFLAGS += -g -std=c99 -O3 -ffast-math
+#CFLAGS += -ffunction-sections -fdata-sections
+#CFLAGS += -Wl,--gc-sections
+#CFLAGS += -fno-common
+#CFLAGS += --param max-inline-insns-single=1000
 
 # specify STM32F429
 CFLAGS += -DSTM32F429_439xx
@@ -91,9 +92,14 @@ OBJS += \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_ioe.o
 
 # Traffic
-OBJS += $(PWD)/CORTEX_M4F_STM32F4/traffic/draw_graph.o
-OBJS += $(PWD)/CORTEX_M4F_STM32F4/traffic/move_car.o
-CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F4/traffic/include
+#OBJS += $(PWD)/CORTEX_M4F_STM32F4/traffic/draw_graph.o
+#OBJS += $(PWD)/CORTEX_M4F_STM32F4/traffic/move_car.o
+#CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F4/traffic/include
+
+# Drink Machine
+Drink_Machine_DIR = $(PWD)/CORTEX_M4F_STM32F4/drink_machine
+OBJS += $(Drink_Machine_DIR)/src/error.o 
+CFLAGS += -I $(Drink_Machine_DIR)/inc
 
 CFLAGS += -DUSE_STDPERIPH_DRIVER
 CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F4 \
@@ -104,6 +110,7 @@ CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F4 \
 	  -I $(PWD)/CORTEX_M4F_STM32F4/Libraries/CMSIS/Include \
 	  -I $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/inc \
 	  -I $(PWD)/Utilities/STM32F429I-Discovery
+
 
 all: $(BIN_IMAGE)
 
@@ -136,6 +143,17 @@ openocd_flash:
 	-c "flash info 0" \
 	-c "flash write_image erase $(BIN_IMAGE)  0x08000000" \
 	-c "reset run" -c shutdown
+
+# start st-util in backgroundand save its PID
+st-util:
+	st-util&
+# if you cannot bind st-util to address 4242, please
+# netstat -anp | grep 4242, and kill the process listening on 4242
+ 
+gdb: st-util 
+	$(GDB) -x gdb_script $(EXECUTABLE)
+
+
 
 .PHONY: clean
 clean:
