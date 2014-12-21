@@ -1,2 +1,4 @@
 tar extended-remote :4242
 b main.c:main
+c
+print a

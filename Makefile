@@ -1,4 +1,4 @@
-PROJECT = drink_machine
+PROJECT = project
 
 EXECUTABLE = $(PROJECT).elf
 BIN_IMAGE = $(PROJECT).bin
