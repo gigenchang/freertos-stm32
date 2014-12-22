@@ -60,9 +60,18 @@ void NMI_Handler(void)
   * @param  None
   * @retval None
   */
+
+
+void **HARDFAULT_PSP;
+register void *stack_pointer __asm__("sp");
+
 void HardFault_Handler(void)
 {
   /* Go to infinite loop when Hard Fault exception occurs */
+  // Hijack the process stack pointer to make backtrace work
+  __asm__("mrs %0, psp" : "=r"(HARDFAULT_PSP) : :);
+  stack_pointer = HARDFAULT_PSP;
+  
   while (1)
   {
   }

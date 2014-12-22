@@ -58,19 +58,19 @@ CFLAGS += -D"assert_param(expr)=((void)0)"
 OBJS += \
       $(PWD)/CORTEX_M4F_STM32F4/main.o \
       $(PWD)/CORTEX_M4F_STM32F4/startup/system_stm32f4xx.o \
-      #$(PWD)/CORTEX_M4F_STM32F4/stm32f4xx_it.o \
+      $(PWD)/CORTEX_M4F_STM32F4/stm32f4xx_it.o \
 
 FreeRTOS_DIR = $(PWD)/FreeRTOS
 
-OBJS += \
-      $(FreeRTOS_DIR)/croutine.o \
-      $(FreeRTOS_DIR)/event_groups.o \
-      $(FreeRTOS_DIR)/list.o \
-      $(FreeRTOS_DIR)/queue.o \
-      $(FreeRTOS_DIR)/tasks.o \
-      $(FreeRTOS_DIR)/timers.o \
-      $(FreeRTOS_DIR)/portable/GCC/ARM_CM4F/port.o \
-      $(FreeRTOS_DIR)/portable/MemMang/heap_1.o \
+#OBJS += \
+#      $(FreeRTOS_DIR)/croutine.o \
+#      $(FreeRTOS_DIR)/event_groups.o \
+#      $(FreeRTOS_DIR)/list.o \
+#      $(FreeRTOS_DIR)/queue.o \
+#      $(FreeRTOS_DIR)/tasks.o \
+#      $(FreeRTOS_DIR)/timers.o \
+#      $(FreeRTOS_DIR)/portable/GCC/ARM_CM4F/port.o \
+#      $(FreeRTOS_DIR)/portable/MemMang/heap_1.o \
 
 OBJS += \
     $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/misc.o \
@@ -109,7 +109,7 @@ CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F4 \
 	  -I $(PWD)/CORTEX_M4F_STM32F4/Libraries/CMSIS/Device/ST/STM32F4xx/Include \
 	  -I $(PWD)/CORTEX_M4F_STM32F4/Libraries/CMSIS/Include \
 	  -I $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/inc \
-	  -I $(PWD)/Utilities/STM32F429I-Discovery
+	  -I $(PWD)/Utilities/STM32F429I-Discovery \
 
 
 all: $(BIN_IMAGE)
