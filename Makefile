@@ -29,6 +29,8 @@ endef
 LDFLAGS += -L $(call get_library_path,libc.a)
 LDFLAGS += -L $(call get_library_path,libgcc.a)
 
+LDFLAGS += -Map $(PROJECT).map
+
 # Basic configurations
 CFLAGS += -g -std=c99
 CFLAGS += -Wall
@@ -149,8 +151,11 @@ st-util:
 	st-util&
 # if you cannot bind st-util to address 4242, please
 # netstat -anp | grep 4242, and kill the process listening on 4242
+open_flash:
+	openocd \
+		-f board/stm32f429discovery.cfg &
  
-gdb: st-util 
+gdb: open_flash
 	$(GDB) -x gdb_script $(EXECUTABLE)
 
 
@@ -162,3 +167,4 @@ clean:
 	rm -rf $(HEX_IMAGE)
 	rm -f $(OBJS)
 	rm -f $(PROJECT).lst
+	rm -f $(PROJECT).map
