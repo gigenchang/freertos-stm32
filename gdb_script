@@ -1,3 +1,4 @@
-tar extended-remote :3333
-b main.c:main
+tar remote :3333
+load project.elf
+b main
 c

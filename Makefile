@@ -133,8 +133,8 @@ $(EXECUTABLE): $(OBJS)
 %.o: %.S
 	$(CC) $(CFLAGS) -c $< -o $@
 
-flash:
-	st-flash write $(BIN_IMAGE) 0x8000000
+#flash:
+#	st-flash write $(BIN_IMAGE) 0x8000000
 
 openocd_flash:
 	openocd \
@@ -147,15 +147,16 @@ openocd_flash:
 	-c "reset run" -c shutdown
 
 # start st-util in backgroundand save its PID
-st-util:
-	st-util&
+#st-util:
+#	st-util&
 # if you cannot bind st-util to address 4242, please
 # netstat -anp | grep 4242, and kill the process listening on 4242
-open_flash:
+
+openocd:
 	openocd \
-		-f board/stm32f429discovery.cfg &
+		-f board/stm32f429discovery.cfg
  
-gdb: open_flash
+gdb:
 	$(GDB) -x gdb_script $(EXECUTABLE)
 
 
